@@ -137,8 +137,8 @@ function Edge({ id, from, to }: EdgeProps) {
             left: '50%',
             transform: 'translate(-50%, -50%)',
             padding: '4px 8px',
-            background: 'black',
-            color: 'white',
+            background: 'var(--text)',
+            color: 'var(--background)',
             borderRadius: 999,
           }}
         >

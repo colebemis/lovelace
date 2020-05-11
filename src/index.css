@@ -1,4 +1,18 @@
+:root {
+  --text: #222222;
+  --background: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #ffffff;
+    --background: #222222;
+  }
+}
+
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
+  color: var(--text);
+  background: var(--background);
 }

@@ -174,22 +174,23 @@ function Edge({ id, from, to }: EdgeProps) {
         y={Math.min(point1.y, point2.y)}
         width={Math.abs(point1.x - point2.x)}
         height={Math.abs(point1.y - point2.y)}
-        style={{ overflow: 'visible' }}
+        style={{ overflow: 'visible', pointerEvents: 'none' }}
       >
-        <div
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            padding: '4px 8px',
-            background: 'var(--text)',
-            color: 'var(--background)',
-            borderRadius: 999,
-            userSelect: 'none',
-          }}
-        >
-          {id}
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              padding: '4px 8px',
+              background: 'var(--text)',
+              color: 'var(--background)',
+              borderRadius: 999,
+            }}
+          >
+            {id}
+          </div>
         </div>
       </foreignObject>
     </>

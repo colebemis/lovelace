@@ -31,6 +31,24 @@ export default function App() {
   return (
     <div>
       <svg viewBox="0 0 600 600" width={600} height={600}>
+        <defs>
+          <marker
+            id="arrow"
+            viewBox="0 0 10 12"
+            refX="9"
+            refY="6"
+            markerWidth="5"
+            markerHeight="6"
+            orient="auto-start-reverse"
+            fill="currentColor"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M 1 1 L 9 6 L 1 11 z" />
+          </marker>
+        </defs>
         {Object.values(edges).map(({ id, from, to }) => (
           <Edge key={id} id={id} from={nodes[from]} to={nodes[to]} />
         ))}
@@ -111,23 +129,51 @@ interface EdgeProps {
   to: Node
 }
 
+interface Point {
+  x: number
+  y: number
+}
+
 function Edge({ id, from, to }: EdgeProps) {
-  return (
+  const [point1, setPoint1] = React.useState<Point | null>(null)
+  const [point2, setPoint2] = React.useState<Point | null>(null)
+
+  React.useLayoutEffect(() => {
+    const fromRect = document.getElementById(from.id)?.getBoundingClientRect()
+    const toRect = document.getElementById(to.id)?.getBoundingClientRect()
+
+    if (fromRect) {
+      setPoint1({
+        x: fromRect.left + fromRect.width / 2,
+        y: fromRect.top + fromRect.height,
+      })
+    }
+
+    if (toRect) {
+      setPoint2({
+        x: toRect.left + toRect.width / 2,
+        y: toRect.top,
+      })
+    }
+  }, [from, to])
+
+  return point1 && point2 ? (
     <>
       <line
-        x1={from.x}
-        y1={from.y}
-        x2={to.x}
-        y2={to.y}
+        x1={point1.x}
+        y1={point1.y}
+        x2={point2.x}
+        y2={point2.y}
         stroke="currentColor"
         strokeWidth={2}
         strokeLinecap="round"
+        markerEnd="url(#arrow)"
       />
       <foreignObject
-        x={Math.min(from.x, to.x)}
-        y={Math.min(from.y, to.y)}
-        width={Math.abs(from.x - to.x)}
-        height={Math.abs(from.y - to.y)}
+        x={Math.min(point1.x, point2.x)}
+        y={Math.min(point1.y, point2.y)}
+        width={Math.abs(point1.x - point2.x)}
+        height={Math.abs(point1.y - point2.y)}
         style={{ overflow: 'visible' }}
       >
         <div
@@ -140,11 +186,12 @@ function Edge({ id, from, to }: EdgeProps) {
             background: 'var(--text)',
             color: 'var(--background)',
             borderRadius: 999,
+            userSelect: 'none',
           }}
         >
           {id}
         </div>
       </foreignObject>
     </>
-  )
+  ) : null
 }
